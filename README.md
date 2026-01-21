@@ -33,6 +33,6 @@ This application is a reminder and logging tool only and does not provide medica
 ## Author
 CS361 Isabelle 
 
-Test commit 1
+Test Commit 1 
 
 
