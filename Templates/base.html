@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{{ title if title else "MediMate" }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+  <div class="app">
+
+    <header class="topbar">
+      <div class="container topbar-inner">
+        <a class="brand" href="{{ url_for('index') }}" aria-label="Go to MediMate home">
+          <span class="brand-icon" aria-hidden="true">💊</span>
+          <div class="brand-text">
+            <div class="brand-title">MediMate</div>
+            <div class="brand-subtitle">simple med tracking</div>
+          </div>
+        </a>
+
+        <nav class="nav" aria-label="Primary navigation">
+          <a href="{{ url_for('index') }}">Medications</a>
+          <a href="{{ url_for('history') }}">History</a>
+          <a href="{{ url_for('about') }}">About</a>
+          <a class="btn primary" href="{{ url_for('add_med') }}">+ Add</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <section class="flash-area" aria-live="polite">
+            {% for category, msg in messages %}
+              <div class="flash flash-{{ category }}">{{ msg }}</div>
+            {% endfor %}
+          </section>
+        {% endif %}
+      {% endwith %}
+
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+      <div class="container footer-inner">
+        <small>
+          MediMate is a tracking and reminder log tool — not medical advice.
+          If you have questions about meds, contact your provider.
+        </small>
+      </div>
+    </footer>
+
+  </div>
+</body>
+</html>

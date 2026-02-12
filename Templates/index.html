@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+  <section class="page-head">
+    <h1>Medications</h1>
+    <p class="muted">
+      Add meds, mark doses as taken, and check your history.
+    </p>
+
+    <div class="toolbar">
+      <div class="search" role="search" aria-label="Search medications">
+        <span aria-hidden="true">🔎</span>
+        <input id="medSearch" type="text" placeholder="Search meds (name, dose, schedule, notes)..." />
+      </div>
+
+      <a class="btn primary" href="{{ url_for('add_med') }}">+ Add 💊</a>
+    </div>
+
+    <p class="muted" style="margin-top:10px;">
+      Tip: schedules can be simple like <strong>Morning</strong>, <strong>Bedtime</strong>, or <strong>9:00 PM</strong>.
+    </p>
+  </section>
+
+  {% if meds|length == 0 %}
+    <div class="card">
+      <h2 class="card-h2">No medications yet</h2>
+      <p class="muted">Click <strong>+ Add</strong> to create your first medication.</p>
+      <a class="btn primary" href="{{ url_for('add_med') }}">Add a medication</a>
+    </div>
+  {% else %}
+    <div class="grid" id="medGrid">
+      {% for med in meds %}
+        <article class="card med-card"
+                 data-search="{{ (med['name'] ~ ' ' ~ med['dose'] ~ ' ' ~ med['schedule'] ~ ' ' ~ (med['notes'] if med['notes'] else '')) | lower }}">
+          <div class="card-top">
+            <div>
+              <div class="med-name">{{ med["name"] }}</div>
+              <div class="med-sub">
+                {{ med["dose"] }} • <span class="badge">{{ med["schedule"] }}</span>
+              </div>
+            </div>
+          </div>
+
+          {% if med["notes"] %}
+            <div class="notes">
+              <div class="notes-label">Notes</div>
+              <div class="notes-text">{{ med["notes"] }}</div>
+            </div>
+          {% endif %}
+
+          <div class="status">
+            <span class="pill" aria-label="Last taken time">
+              Last taken:
+              {% if med["last_taken"] %}
+                <strong>{{ med["last_taken"] }}</strong>
+              {% else %}
+                <strong>never</strong>
+              {% endif %}
+            </span>
+          </div>
+
+          <div class="actions">
+            <form method="POST" action="{{ url_for('mark_taken', med_id=med['id']) }}">
+              <button class="btn primary" type="submit">✅ Mark Taken</button>
+            </form>
+
+            <a class="btn" href="{{ url_for('edit_med', med_id=med['id']) }}">✏️ Edit</a>
+
+            <form method="POST" action="{{ url_for('delete_med', med_id=med['id']) }}"
+                  onsubmit="return confirm('Delete this medication?');">
+              <button class="btn danger" type="submit">🗑️ Delete</button>
+            </form>
+          </div>
+        </article>
+      {% endfor %}
+    </div>
+
+    <script>
+      // Simple client-side search (student-friendly, no libraries)
+      const input = document.getElementById("medSearch");
+      const cards = Array.from(document.querySelectorAll(".med-card"));
+
+      input.addEventListener("input", () => {
+        const q = input.value.trim().toLowerCase();
+        cards.forEach(card => {
+          const hay = card.getAttribute("data-search") || "";
+          card.style.display = hay.includes(q) ? "" : "none";
+        });
+      });
+    </script>
+  {% endif %}
+{% endblock %}

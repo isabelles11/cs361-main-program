@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="page-head">
+  {% if mode == "add" %}
+    <h1>Add Medication</h1>
+    <p class="muted">Enter your medication details below.</p>
+  {% else %}
+    <h1>Edit Medication</h1>
+    <p class="muted">Update your medication information.</p>
+  {% endif %}
+</section>
+
+<div class="card form-card">
+
+  <form method="POST">
+
+    <!-- Medication Name -->
+    <div class="form-row">
+      <label for="name">
+        Medication Name <span class="req">*</span>
+      </label>
+
+      <input
+        id="name"
+        name="name"
+        type="text"
+        maxlength="60"
+        required
+        placeholder="e.g., Lantus"
+        value="{{ med['name'] if med else '' }}"
+      >
+    </div>
+
+    <!-- Dose -->
+    <div class="form-row">
+      <label for="dose">
+        Dose <span class="req">*</span>
+      </label>
+
+      <input
+        id="dose"
+        name="dose"
+        type="text"
+        maxlength="60"
+        required
+        placeholder="e.g., 10 units"
+        value="{{ med['dose'] if med else '' }}"
+      >
+    </div>
+
+    <!-- Schedule (IMPORTANT: must be name='schedule' for app.py) -->
+    <div class="form-row">
+      <label for="schedule">
+        Schedule / Time <span class="req">*</span>
+      </label>
+
+      <input
+        id="schedule"
+        name="schedule"
+        type="text"
+        maxlength="40"
+        required
+        placeholder="e.g., Morning, Bedtime, or 9:00 PM"
+        value="{{ med['schedule'] if med else '' }}"
+      >
+
+      <div class="help">
+        Keep it simple (Morning, Afternoon, Bedtime, or specific time).
+      </div>
+    </div>
+
+    <!-- Notes -->
+    <div class="form-row">
+      <label for="notes">Notes (optional)</label>
+
+      <textarea
+        id="notes"
+        name="notes"
+        rows="3"
+        maxlength="250"
+        placeholder="e.g., Take with food"
+      >{{ med['notes'] if med else '' }}</textarea>
+    </div>
+
+    <!-- Buttons -->
+    <div class="actions">
+      <button class="btn primary" type="submit">
+        {% if mode == "add" %}
+          💾 Save Medication
+        {% else %}
+          ✅ Update Medication
+        {% endif %}
+      </button>
+
+      <a class="btn" href="{{ url_for('index') }}">
+        ← Cancel
+      </a>
+    </div>
+
+  </form>
+
+</div>
+
+{% endblock %}

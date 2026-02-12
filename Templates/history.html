@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>History</h1>
+  <p class="muted">This shows recent “Mark Taken” events.</p>
+
+  {% if logs|length == 0 %}
+    <div class="card">
+      <p><strong>No history yet.</strong></p>
+      <p>Go to Medications and click <em>Mark Taken</em>.</p>
+    </div>
+  {% else %}
+    <div class="card">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Taken at</th>
+            <th>Medication</th>
+            <th>Dose</th>
+            <th>Scheduled time</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in logs %}
+            <tr>
+              <td>{{ row["taken_at"] }}</td>
+              <td>{{ row["name"] }}</td>
+              <td>{{ row["dose"] }}</td>
+              <td>{{ row["time_of_day"] }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% endif %}
+{% endblock %}
